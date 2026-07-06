@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "title": "Node.js cơ bản",
+    "description": "Khóa học Node.js cơ bản cho người mới bắt đầu",
+    "price": 29.99,
+    "instructor": "Nguyễn Văn A"
+  },
+  {
+    "id": 2,
+    "title": "React.js nâng cao",
+    "description": "Khóa học React.js nâng cao cho lập trình viên",
+    "price": 19.99,
+    "instructor": "Trần Thị B"
+  },
+  {
+    "id": 3,
+    "title": "haha",
+    "description": "hehe",
+    "price": 26.99,
+    "instructor": "le van a"
+  }
+]
