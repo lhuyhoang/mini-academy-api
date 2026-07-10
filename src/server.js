@@ -6,6 +6,9 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
+const logger = require("./middleware/logger");
+app.use(logger);
+
 const courseRouter = require("./routes/courseRoutes");
 
 app.use("/api/courses", courseRouter);
