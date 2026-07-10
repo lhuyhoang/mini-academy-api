@@ -1,0 +1,242 @@
+{
+	"info": {
+		"name": "Mini Academy API",
+		"description": "Collection các API cho Mini Academy - quản lý khóa học e-learning.\n\n## Cách sử dụng:\n1. Set biến `base_url` trong Collection Variables\n2. Gọi **Register** hoặc **Login** để lấy token\n3. Các request khác tự động gắn token (nếu cần auth)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://mini-academy-api-h5w9.onrender.com",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "course_id",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Auth",
+			"description": "Đăng ký và đăng nhập để lấy JWT token",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Nguyen Van A\",\n    \"email\": \"user@example.com\",\n    \"password\": \"User@123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "register"]
+						}
+					}
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.collectionVariables.set('token', jsonData.token);",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@academy.com\",\n    \"password\": \"Admin@123123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "login"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Courses",
+			"description": "CRUD khóa học",
+			"item": [
+				{
+					"name": "Get all courses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/courses",
+							"host": ["{{base_url}}"],
+							"path": ["api", "courses"]
+						}
+					}
+				},
+				{
+					"name": "Get courses with filters",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/courses?search=node&price[gte]=10&sort=-price&page=1&limit=5",
+							"host": ["{{base_url}}"],
+							"path": ["api", "courses"],
+							"query": [
+								{ "key": "search", "value": "node" },
+								{ "key": "price[gte]", "value": "10" },
+								{ "key": "sort", "value": "-price" },
+								{ "key": "page", "value": "1" },
+								{ "key": "limit", "value": "5" }
+							]
+						}
+					}
+				},
+				{
+					"name": "Get course by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/courses/{{course_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "courses", "{{course_id}}"]
+						}
+					}
+				},
+				{
+					"name": "Create course",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Node.js co ban\",\n    \"description\": \"Khoa hoc Node.js cho nguoi moi bat dau\",\n    \"price\": 29.99,\n    \"instructor\": \"Nguyen Van A\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/courses",
+							"host": ["{{base_url}}"],
+							"path": ["api", "courses"]
+						}
+					}
+				},
+				{
+					"name": "Create course (with thumbnail)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{ "key": "title", "value": "React nang cao", "type": "text" },
+								{ "key": "description", "value": "Khoa hoc React nang cao", "type": "text" },
+								{ "key": "price", "value": "39.99", "type": "text" },
+								{ "key": "instructor", "value": "Tran Thi B", "type": "text" },
+								{ "key": "thumbnail", "type": "file", "src": "" }
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/courses",
+							"host": ["{{base_url}}"],
+							"path": ["api", "courses"]
+						}
+					}
+				},
+				{
+					"name": "Update course",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Node.js co ban (da cap nhat)\",\n    \"description\": \"Mo ta da duoc cap nhat\",\n    \"price\": 19.99,\n    \"instructor\": \"Nguyen Van A\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/courses/{{course_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "courses", "{{course_id}}"]
+						}
+					}
+				},
+				{
+					"name": "Delete course",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/courses/{{course_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "courses", "{{course_id}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/",
+					"host": ["{{base_url}}"],
+					"path": [""]
+				}
+			}
+		}
+	]
+}
